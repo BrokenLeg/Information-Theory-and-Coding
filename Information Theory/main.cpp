@@ -2,6 +2,8 @@
 #include <fstream>
 #include <Windows.h>
 
+//TODO: errors handling, effective reading 
+
 //zero initialized
 static uint32_t statistics[256];
 static uint32_t totalSize;
@@ -10,14 +12,14 @@ int main(int argc, char* argv[])
 {
 	if (argc != 2)
 	{
-		std::cout << "usage: EntropyCount <filename>" << std::endl;
+		std::cout << "usage: entrop <filename>" << std::endl;
 		return 1;
 	}
 
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
-	std::ifstream file(argv[1], std::ios::in);
+	std::ifstream file(argv[1], std::ios::in | std::ios::binary);
 	uint8_t currentByte;
 	
 	while (file)
