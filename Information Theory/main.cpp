@@ -12,7 +12,7 @@ static uint32_t totalSize;
 
 int main(int argc, char* argv[])
 {
-	if (argc < 2 || argc > 4)
+	if (argc < 2 || argc > 5)
 	{
 		std::cout << "Usage: entrop --file <filename> OR entrop --input" << std::endl;
 		return INCORRECT_FORMAT;
@@ -24,9 +24,9 @@ int main(int argc, char* argv[])
 	//TODO: strings comparison
 	if (strcmp(argv[1], "--file") == 0)
 	{
-		if (argc != 3)
+		if (argc != 4)
 		{
-			std::cout << "usage: entrop --file <filename>" << std::endl;
+			std::cout << "usage: entrop --file <filename> <output>" << std::endl;
 			return FILE_NOT_GIVEN;
 		}
 
@@ -78,6 +78,22 @@ int main(int argc, char* argv[])
 	float information = totalSize * entropy;
 
 	//TODO: fancy output
-	std::cout << "Entropy H : " << entropy << std::endl;
-	std::cout << "Information I : " << information << std::endl;
+
+	std::ofstream outFile(argv[3], std::ios::app);
+
+	//std::cout << "File size N : " << totalSize << std::endl;
+	//std::cout << "Entropy H : " << entropy << std::endl;
+	//std::cout << "Information I : " << information << std::endl;
+
+	outFile << argv[2] << " " << totalSize << ' ' << entropy << ' ' << information << std::endl;
+	outFile.close();
+
+	//TODO: csv output
+	for (uint32_t i = 0; i < 256; i++)
+	{
+		if (statistics[i] > 0)
+		{
+			//std::cout << "\'" << static_cast<char>(i) << "\' :" << statistics[i] << std::endl;
+		}
+	}
 }
