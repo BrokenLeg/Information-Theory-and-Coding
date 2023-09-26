@@ -69,6 +69,7 @@ int main(int argc, char* argv[])
 	{
 		if (statistics[i] > 0)
 		{
+			//CHECK: float-casting
 			float probability = static_cast<float>(statistics[i]) / static_cast<float>(totalSize);
 			entropy -= probability * log2f(probability);
 		}
@@ -76,6 +77,7 @@ int main(int argc, char* argv[])
 
 	float information = totalSize * entropy;
 
+	//TODO: fancy output
 	std::cout << "Entropy H : " << entropy << std::endl;
 	std::cout << "Information I : " << information << std::endl;
 }
