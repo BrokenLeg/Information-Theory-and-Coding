@@ -2,37 +2,65 @@
 #include <fstream>
 #include <Windows.h>
 
-//TODO: errors handling, effective reading 
-
-//zero initialized
+//TODO: global
 static uint32_t statistics[256];
 static uint32_t totalSize;
 
+//TODO: cmd errors
+#define INCORRECT_FORMAT 1
+#define FILE_NOT_GIVEN 2
+
 int main(int argc, char* argv[])
 {
-	if (argc != 2)
+	if (argc < 2 || argc > 4)
 	{
-		std::cout << "usage: entrop <filename>" << std::endl;
-		return 1;
+		std::cout << "Usage: entrop --file <filename> OR entrop --input" << std::endl;
+		return INCORRECT_FORMAT;
 	}
 
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
-	std::ifstream file(argv[1], std::ios::in | std::ios::binary);
-	uint8_t currentByte;
-	
-	while (file)
+	//TODO: strings comparison
+	if (strcmp(argv[1], "--file") == 0)
 	{
-		file >> currentByte;
-
-		if (file.eof())
+		if (argc != 3)
 		{
-			break;
+			std::cout << "usage: entrop --file <filename>" << std::endl;
+			return FILE_NOT_GIVEN;
 		}
 
-		statistics[currentByte]++;
-		totalSize++;
+		//TODO: correct file
+		std::ifstream file(argv[2], std::ios::in | std::ios::binary);
+		uint8_t currentByte;
+
+		//CHECK: correct reading, more efficient reading
+		while (file)
+		{
+			file >> currentByte;
+
+			if (file.eof())
+			{
+				break;
+			}
+
+			statistics[currentByte]++;
+			totalSize++;
+		}
+	}
+	else if (strcmp(argv[1], "--input") == 0)
+	{
+		uint8_t currentByte;
+		while (std::cin >> currentByte)
+		{
+			statistics[currentByte]++;
+			totalSize++;
+		}
+	}
+	else
+	{
+		std::cout << "Usage: entrop --file <filename> OR entrop --input" << std::endl;
+		return INCORRECT_FORMAT;
 	}
 
 	float entropy = 0.0f;
