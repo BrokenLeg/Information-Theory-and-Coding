@@ -76,16 +76,27 @@ int main(int argc, char* argv[])
 	}
 
 	float information = totalSize * entropy;
+	float maximumEntropy = 8.0f; //log2f(256)
+	float absolute = maximumEntropy - entropy;
+	float relative = absolute/maximumEntropy;
 
 	//TODO: fancy output
 
-	std::ofstream outFile(argv[3], std::ios::app);
+	std::ofstream outFile(argv[argc-1], std::ios::app);
 
 	//std::cout << "File size N : " << totalSize << std::endl;
 	//std::cout << "Entropy H : " << entropy << std::endl;
 	//std::cout << "Information I : " << information << std::endl;
 
-	outFile << argv[2] << " " << totalSize << ' ' << entropy << ' ' << information << std::endl;
+	std::string filename = (argc == 4) ? argv[2] : "";
+	
+	if (!filename.empty())
+	{
+		filename += " ";
+	}
+
+	outFile << filename << totalSize << ' ' << entropy << ' ' << maximumEntropy << ' ' << 
+		information << ' ' << absolute << ' ' << relative << std::endl;
 	outFile.close();
 
 	//TODO: csv output
