@@ -64,13 +64,16 @@ int main(int argc, char* argv[])
 	}
 
 	float entropy = 0.0f;
-
+	unsigned int sumOfLength = 0;
+	unsigned int usedAlphabetSize = 0;
 	for (uint32_t i = 0; i < 256; i++)
 	{
 		if (statistics[i] > 0)
 		{
 			//CHECK: float-casting
+			usedAlphabetSize++;
 			float probability = static_cast<float>(statistics[i]) / static_cast<float>(totalSize);
+			sumOfLength -= std::ceil(log2f(probability));
 			entropy -= probability * log2f(probability);
 		}
 	}
@@ -79,7 +82,8 @@ int main(int argc, char* argv[])
 	float maximumEntropy = 8.0f; //log2f(256)
 	float absolute = maximumEntropy - entropy;
 	float relative = absolute/maximumEntropy;
-
+	unsigned int additionalInfoSize = usedAlphabetSize + sumOfLength;
+	float length = (additionalInfoSize + entropy * totalSize) / usedAlphabetSize;
 	//TODO: fancy output
 
 	std::ofstream outFile(argv[argc-1], std::ios::app);
@@ -96,7 +100,7 @@ int main(int argc, char* argv[])
 	}
 
 	outFile << filename << totalSize << ' ' << entropy << ' ' << maximumEntropy << ' ' << 
-		information << ' ' << absolute << ' ' << relative << std::endl;
+		information << ' ' << absolute << ' ' << relative << length << std::endl;
 	outFile.close();
 
 	//TODO: csv output
